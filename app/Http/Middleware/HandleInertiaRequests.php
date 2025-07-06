@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // 1. Pastikan Auth diimpor
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
 
@@ -50,7 +51,37 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'sidebarOpen' => !$request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+
+            // 2. Tambahkan logika navigasi dinamis di sini
+            'nav' => function () {
+                $user = Auth::user();
+                if (!$user) {
+                    return [];
+                }
+
+                 // --- TAMBAHKAN BARIS INI ---
+                /** @var \App\Models\User $user */
+                // --------------------------
+
+                // Menu dasar untuk semua peran
+                $menu = [
+                    ['title' => 'Dashboard', 'href' => '/dashboard', 'icon' => 'LayoutGrid'],
+                    ['title' => 'Courses', 'href' => '/courses', 'icon' => 'BookOpen'],
+                    ['title' => 'Attendance', 'href' => '/attendance', 'icon' => 'ClipboardCheck'],
+                ];
+
+                // Tambahkan menu jika pengguna adalah admin
+                if ($user->isAdmin()) {
+                    $adminMenu = [
+                        ['title' => 'Classrooms', 'href' => '/classrooms', 'icon' => 'DoorOpen'],
+                        ['title' => 'Schedules', 'href' => '/schedules', 'icon' => 'CalendarDays'],
+                    ];
+                    $menu = array_merge($menu, $adminMenu);
+                }
+
+                return $menu;
+            },
         ];
     }
 }
