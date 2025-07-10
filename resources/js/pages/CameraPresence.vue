@@ -6,36 +6,28 @@
     <div class="bg-white shadow rounded p-4">
       <div class="relative aspect-video bg-black rounded overflow-hidden mb-6">
         <!-- Kamera -->
-        <img
-          v-if="cameraReady"
-          :src="cameraUrl"
-          alt="Live Camera Stream"
-          class="w-full h-full object-cover transform scale-x-[-1]"
-          @error="onCameraError"
-        />
+        <img v-if="cameraReady" :src="cameraUrl" alt="Live Camera Stream"
+          class="w-full h-full object-cover transform scale-x-[-1]" @error="onCameraError" />
 
         <!-- Loading -->
-        <div
-          v-if="isLoading"
-          class="absolute inset-0 flex items-center justify-center text-white"
-        >
+        <div v-if="isLoading" class="absolute inset-0 flex items-center justify-center text-white">
           <span>Loading stream...</span>
         </div>
 
         <!-- Error -->
-        <div
-          v-if="cameraError"
-          class="absolute inset-0 flex items-center justify-center text-red-500 bg-black/70 text-center px-4"
-        >
+        <div v-if="cameraError"
+          class="absolute inset-0 flex items-center justify-center text-red-500 bg-black/70 text-center px-4">
           <p>Kamera tidak dapat diakses. Pastikan ESP32 aktif dan IP benar.</p>
         </div>
 
         <!-- Popup -->
         <transition name="fade">
-          <div
-            v-if="showPopup"
-            class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow"
-          >
+          <div v-if="showPopup" class="absolute bottom-4 left-1/2 transform -translate-x-1/2
+           bg-green-600 text-white px-6 py-3 rounded shadow-lg font-semibold text-lg flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
             Presensi Berhasil
           </div>
         </transition>
@@ -140,6 +132,7 @@ onBeforeUnmount(() => {
 .fade-leave-active {
   transition: opacity 0.5s;
 }
+
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
