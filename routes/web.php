@@ -16,8 +16,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // TAMBAHKAN DUA BARIS INI
     Route::get('/profile/create', [ProfileController::class, 'create'])->name('profile.create');
     Route::post('/profile', [ProfileController::class, 'store'])->name('profile.store');
-});
 
+    // Presence
+    Route::get('/presence', function () {
+        return Inertia::render('CameraPresence');
+    });
+});
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
