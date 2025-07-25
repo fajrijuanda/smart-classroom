@@ -2,14 +2,14 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CourseController;
-use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\AcademicCalendarController;
-use App\Http\Controllers\RoomController;
-use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\AcademicYearController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\AttendanceController;
+use App\Http\Controllers\Api\AcademicCalendarController;
+use App\Http\Controllers\Api\RoomController;
+use App\Http\Controllers\Api\ScheduleController;
+use App\Http\Controllers\Api\AcademicYearController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
