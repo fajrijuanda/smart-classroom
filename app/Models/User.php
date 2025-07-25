@@ -10,66 +10,53 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role', // 'student', 'lecturer', 'admin'
+        'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    public function profile()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasOne(Profile::class);
     }
 
-    // app/Models/User.php
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'lecturer_id');
+    }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
     }
 
-    // Jika seorang user adalah dosen
-    public function taughtCourses()
+    public function schedules()
     {
-        return $this->hasMany(Course::class, 'lecturer_id');
-    }
-
-    // Jika seorang user adalah mahasiswa
-    public function enrolledCourses()
-    {
-        return $this->belongsToMany(Course::class, 'enrollment', 'user_id', 'course_id')
-                    ->withPivot('status') // 'active', 'completed', 'dropped'
-                    ->withTimestamps();
-    }
-    // Jika seorang user adalah admin
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
+        return $this->hasManyThrough(
+            Schedule::class,
+            Enrollment::class,
+            'user_id',
+            'course_id',
+            'id',
+            'course_id'
+        );
     }
 }

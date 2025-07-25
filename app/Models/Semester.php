@@ -2,39 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Semester extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
-    use \Illuminate\Notifications\Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'start_date',
-        'end_date',
-    ];
+    protected $fillable = ['name'];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    public function academicYears()
     {
-        return [
-            'start_date' => 'datetime',
-            'end_date' => 'datetime',
-        ];
-    }
-
-    public function courses()
-    {
-        return $this->hasMany(Course::class);
+        return $this->hasMany(AcademicYear::class);
     }
 }

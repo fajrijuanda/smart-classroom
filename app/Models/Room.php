@@ -2,24 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
-    use \Illuminate\Notifications\Notifiable;
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    use HasFactory;
+
     protected $fillable = [
         'name',
-        'capacity',
         'building_id',
-        'device_id'
+        'device_id',
     ];
-    // app/Models/Room.php
+
+    public function building()
+    {
+        return $this->belongsTo(Building::class);
+    }
+
     public function schedules()
     {
         return $this->hasMany(Schedule::class);

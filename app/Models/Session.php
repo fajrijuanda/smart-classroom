@@ -5,28 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Attendance extends Model
+class Session extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'schedule_id',
-        'recorded_at',
-        'status',
-    ];
+    protected $table = 'sessions';
 
-    protected $casts = [
-        'recorded_at' => 'datetime',
+    protected $primaryKey = 'id';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
+    protected $fillable = [
+        'id',
+        'user_id',
+        'ip_address',
+        'user_agent',
+        'payload',
+        'last_activity',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function schedule()
-    {
-        return $this->belongsTo(Schedule::class);
     }
 }

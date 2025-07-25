@@ -5,19 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AcademicCalendarMeeting extends Model
+class AcademicCalendarHoliday extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'academic_calendar_id',
-        'meeting_number',
-        'meeting_date',
+        'holiday_date',
+        'name',
         'description',
     ];
 
     protected $casts = [
-        'meeting_date' => 'date',
+        'holiday_date' => 'date',
     ];
 
     public function academicCalendar()

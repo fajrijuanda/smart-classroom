@@ -2,43 +2,39 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AcademicYear extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
-    use \Illuminate\Notifications\Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'start_date',
         'end_date',
+        'is_current',
+        'semester_id',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'is_current' => 'boolean',
+    ];
+
+    public function semester()
     {
-        return [
-            'start_date' => 'datetime',
-            'end_date' => 'datetime',
-        ];
+        return $this->belongsTo(Semester::class);
     }
 
-    public function semesters()
+    public function enrollments()
     {
-        return $this->hasMany(Semester::class);
+        return $this->hasMany(Enrollment::class);
     }
-    public function courses()
+
+    public function academicCalendars()
     {
-        return $this->hasMany(Course::class);
+        return $this->hasMany(AcademicCalendar::class);
     }
 }

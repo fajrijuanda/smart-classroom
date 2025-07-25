@@ -2,34 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Enrollment extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
-    use \Illuminate\Notifications\Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'user_id',
         'course_id',
-        'semester_id',
-        'status', // 'active', 'completed', 'dropped'
+        'academic_year_id',
     ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [];
-    }
 
     public function user()
     {
@@ -41,8 +25,8 @@ class Enrollment extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function semester()
+    public function academicYear()
     {
-        return $this->belongsTo(Semester::class);
+        return $this->belongsTo(AcademicYear::class);
     }
 }
