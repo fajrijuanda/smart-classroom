@@ -6,6 +6,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AcademicCalendarController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\AcademicYearController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -13,6 +17,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
+    // Auth routes
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     
@@ -20,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('profile')->group(function () {
         Route::put('/', [ProfileController::class, 'update']);
         Route::get('/face-images', [ProfileController::class, 'getFaceImages']);
+        Route::post('/face-images', [ProfileController::class, 'manageFaceImages']);
     });
     
     // Course routes
@@ -35,4 +41,26 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/report', [AttendanceController::class, 'studentReport']);
         Route::get('/report/{course}', [AttendanceController::class, 'courseReport']);
     });
+
+    // Academic Calendar routes
+    Route::prefix('academic-calendars')->group(function () {
+        Route::get('/current', [AcademicCalendarController::class, 'getCurrentCalendar']);
+        Route::post('/{calendar}/holidays', [AcademicCalendarController::class, 'addHoliday']);
+        Route::post('/{calendar}/meetings', [AcademicCalendarController::class, 'addMeeting']);
+    });
+
+    // Room routes
+    Route::prefix('rooms')->group(function () {
+        Route::get('/buildings', [RoomController::class, 'getBuildingsWithRooms']);
+        Route::get('/by-device', [RoomController::class, 'getRoomByDevice']);
+    });
+
+    // Schedule routes
+    Route::prefix('schedules')->group(function () {
+        Route::get('/today', [ScheduleController::class, 'getTodaySchedules']);
+        Route::get('/my-schedules', [ScheduleController::class, 'getStudentSchedules']);
+    });
+
+    // Academic Year routes
+    Route::get('/academic-years/current', [AcademicYearController::class, 'getCurrentAcademicYear']);
 });

@@ -46,4 +46,40 @@ class ProfileController extends Controller
             'face_images' => json_decode($profile->face_images, true)
         ]);
     }
+
+
+    public function manageFaceImages(Request $request)
+    {
+        $request->validate([
+            'action' => 'required|in:add,remove,replace',
+            'images' => 'required|array',
+            'images.*' => 'url'
+        ]);
+    
+        $user = $request->user();
+        $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+        $currentImages = $profile->face_images ? json_decode($profile->face_images, true) : [];
+    
+        switch ($request->action) {
+            case 'add':
+                $updatedImages = array_merge($currentImages, $request->images);
+                break;
+                
+            case 'remove':
+                $updatedImages = array_diff($currentImages, $request->images);
+                break;
+                
+            case 'replace':
+                $updatedImages = $request->images;
+                break;
+        }
+    
+        $profile->face_images = json_encode(array_values(array_unique($updatedImages)));
+        $profile->save();
+    
+        return response()->json([
+            'message' => 'Face images updated',
+            'face_images' => $updatedImages
+        ]);
+    }
 }
