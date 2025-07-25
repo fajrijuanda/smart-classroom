@@ -5,20 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Building;
 use App\Models\Room;
+use Illuminate\Support\Facades\Validator;
 
 class RoomController extends Controller
 {
-    // Mendapatkan semua gedung dengan ruangan
     public function getBuildingsWithRooms()
     {
         $buildings = Building::with('rooms')->get();
         return response()->json($buildings);
     }
 
-    // Mendapatkan ruangan berdasarkan device ID
     public function getRoomByDevice(Request $request)
     {
-        $request->validate(['device_id' => 'required|string']);
+        $validator = Validator::make($request->all(), [
+            'device_id' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         $room = Room::where('device_id', $request->device_id)
             ->with('building')

@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Schedule;
-use App\Models\Course;
 use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
-    // Mendapatkan jadwal untuk hari ini
     public function getTodaySchedules(Request $request)
     {
         $user = $request->user();
@@ -25,7 +23,6 @@ class ScheduleController extends Controller
         return response()->json($schedules);
     }
 
-    // Mendapatkan jadwal mahasiswa
     public function getStudentSchedules(Request $request)
     {
         $user = $request->user();

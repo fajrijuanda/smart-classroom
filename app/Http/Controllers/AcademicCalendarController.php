@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AcademicCalendar;
-use App\Models\AcademicCalendarHoliday;
-use App\Models\AcademicCalendarMeeting;
+use Illuminate\Support\Facades\Validator;
 
 class AcademicCalendarController extends Controller
 {
-    // Mendapatkan kalender aktif
     public function getCurrentCalendar()
     {
         $calendar = AcademicCalendar::where('is_current', true)
@@ -19,14 +17,17 @@ class AcademicCalendarController extends Controller
         return response()->json($calendar);
     }
 
-    // Menambahkan hari libur
     public function addHoliday(Request $request, AcademicCalendar $calendar)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'holiday_date' => 'required|date',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         $holiday = $calendar->holidays()->create($request->all());
 
@@ -36,14 +37,17 @@ class AcademicCalendarController extends Controller
         ], 201);
     }
 
-    // Menambahkan jadwal pertemuan
     public function addMeeting(Request $request, AcademicCalendar $calendar)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'meeting_date' => 'required|date',
             'meeting_number' => 'required|integer',
             'description' => 'nullable|string',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         $meeting = $calendar->meetings()->create($request->all());
 

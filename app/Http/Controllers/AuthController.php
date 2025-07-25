@@ -29,7 +29,6 @@ class AuthController extends Controller
             'role' => $request->role,
         ]);
 
-        // Create profile for student
         if ($request->role === 'student') {
             $user->profile()->create([
                 'nim' => $request->nim ?? 'NIM' . time(),
@@ -49,12 +48,16 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        if (!Auth::attempt($credentials)) {
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 

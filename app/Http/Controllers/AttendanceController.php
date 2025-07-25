@@ -5,28 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\Schedule;
-use App\Models\User;
+use App\Models\Course;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class AttendanceController extends Controller
 {
     public function record(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'schedule_id' => 'required|exists:schedules,id',
-            'device_id' => 'required|exists:rooms,device_id',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         $user = $request->user();
         $schedule = Schedule::find($request->schedule_id);
 
-        // Verify device ID matches room
         $room = $schedule->room;
-        if ($room->device_id !== $request->device_id) {
+        /*if ($room->device_id !== $request->device_id) {
             return response()->json(['message' => 'Invalid device for this schedule'], 400);
-        }
+        }*/
 
-        // Check if already recorded
         $existing = Attendance::where('user_id', $user->id)
             ->where('schedule_id', $request->schedule_id)
             ->exists();
@@ -35,7 +37,6 @@ class AttendanceController extends Controller
             return response()->json(['message' => 'Attendance already recorded'], 409);
         }
 
-        // Determine status (on-time or late)
         $now = Carbon::now();
         $startTime = Carbon::parse($schedule->start_time);
         $status = $now->diffInMinutes($startTime) > 15 ? 'late' : 'present';

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Enrollment;
-use App\Models\Schedule;
 use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
@@ -39,12 +38,10 @@ class CourseController extends Controller
             return response()->json(['message' => 'Only students can enroll'], 403);
         }
 
-        // Check if already enrolled
         if ($user->enrollments()->where('course_id', $course->id)->exists()) {
             return response()->json(['message' => 'Already enrolled in this course'], 409);
         }
 
-        // Check capacity
         if ($course->enrollments()->count() >= $course->capacity) {
             return response()->json(['message' => 'Course is full'], 400);
         }
@@ -52,7 +49,7 @@ class CourseController extends Controller
         Enrollment::create([
             'user_id' => $user->id,
             'course_id' => $course->id,
-            'academic_year_id' => 1, // Default academic year
+            'academic_year_id' => 1,
         ]);
 
         return response()->json(['message' => 'Enrolled successfully']);
