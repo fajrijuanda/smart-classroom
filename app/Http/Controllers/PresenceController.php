@@ -13,10 +13,10 @@ class PresenceController extends Controller
 
         // Example
         return response()->json([
-            'name' => 'Test Budi',
-            'nim' => '123456789',
-            'class' => 'IF22A',
-            'last_seen' => now()->format('d M Y H:i'),
+            'name' => 'Bisma Candra Gumilang',
+            'nim' => '22416255201165',
+            'class' => 'IF22B',
+            'last_seen' => now()->subDays(3)->format('d M Y H:i'),
         ]);
 
         /*if ($student) {
