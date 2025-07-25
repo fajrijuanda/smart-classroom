@@ -59,4 +59,10 @@ class User extends Authenticatable
             'course_id'
         );
     }
+
+    // Jika seorang user adalah admin
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
 }
